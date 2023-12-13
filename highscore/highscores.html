@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz App</title>
+    <style>
+        *{
+            font-family: 'Times New Roman', Times, serif;
+        }
+        body{
+            background-color: #3C4C53;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+        #quiz-container{
+            margin-left: auto;
+            margin-right: auto;
+            display: block;
+            text-align: center;
+            background-color: #27293299;
+            width: 50%;
+            margin-top: 10%;
+            max-height: 100vh;
+            border-radius: 10px;
+        }
+        h2{
+            color: #FFF;
+            background-color: #828489;
+            margin: 5%;
+            padding: 5%;
+            width: 85%;
+            font-size: 2.5rem;
+            text-align: center;
+            margin-left: auto;
+            margin-right: auto;
+            max-height: 100vh;
+            border-radius: 10px;
+            font-family: 'Times New Roman', Times, serif;
+        }
+        #start-quiz button{
+            font-size: 1.8rem;
+            padding: 2%;
+            color: white;
+            background-color: #4D7EA8;
+            border: none;
+            border-radius: 10px;
+        }
+        #start-quiz button:hover{
+            color: #000;
+            background-color: #B6C2D9;
+        }
+        #count-instruct{
+            color: #FFF;
+            font-size: 1.4rem;
+            padding: 4%;
+        }
+    </style>
+</head>
+<body>
+    <div id="quiz-container">
+        <h2>Quiz App <br> <span style="font-size: 1.5rem;">"General Knowledge Quiz" <br>Test your knowledge</span></h2>
+        <p id="question-container"></p>
+        <div id =choice-btn></div>
+        <div id="start-quiz">
+            <a href="questions.html"><button id="start-btn">Start Quiz</button></a>
+            <p id="count-instruct">You have 40 seconds to answer each question</p>
+        </div>
+    </div>
+
+
+    </script>
+</body>
+</html> 

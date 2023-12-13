@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz App</title>
+    <style>
+        @keyframes sliding{
+            0%{right: -700px; opacity: 0%;}
+            50%{right: -10px; opacity: 50%;}
+            100%{right: 0px; opacity: 100%;}
+        }
+        @keyframes fadeIn{
+            0%{opacity: 0%;}
+            100%{opacity: 100%;}
+        }
+        *{
+            font-family: 'Times New Roman', Times, serif;
+        }
+        body{
+            background-color: #3C4C53;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+        #quiz-container{
+            margin-left: auto;
+            margin-right: auto;
+            display: block;
+            text-align: center;
+            background-color: #27293299;
+            width: 50%;
+            margin-top: 10%;
+            max-height: 100vh;
+            border-radius: 10px;
+            position: relative;
+            animation: fadeIn 1.2s;
+        }
+        h2{
+            color: #FFF;
+            background-color: #828489;
+            margin: 5%;
+            padding: 5%;
+            width: 85%;
+            font-size: 2.5rem;
+            text-align: center;
+            margin-left: auto;
+            margin-right: auto;
+            max-height: 100vh;
+            border-radius: 10px;
+            font-family: 'Times New Roman', Times, serif;
+        }
+        #start-timer button{
+            font-size: 1.8rem;
+            padding: 2%;
+            color: white;
+            background-color: #4D7EA8;
+            border: none;
+            border-radius: 10px;
+        }
+        #start-timer button:hover{
+            color: #000;
+            background-color: #B6C2D9;
+        }
+        #count-timer{
+            color: #FFF;
+            font-size: 1.8rem;
+        }
+        #question-container{
+            color: #FFF;
+            font-size: 3rem;
+        }
+        .answer-button{
+            border: none;
+            margin: 3%;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            width: 75%;
+            font-size: 1.45rem;
+            cursor: pointer;
+            border-radius: 5px;
+            padding: 2%;
+        }
+        .answer-button:hover{
+            background-color: #9CAFB7;
+            color: #FFF;
+            transition: 0.3s;
+        }
+        #choice-btn{
+            margin-top: 5%;
+            margin-bottom: 10%;
+        }
+        #count-timer{
+            font-size: 1.2rem;
+            text-align: right;
+            margin-right: 5%;
+        }
+        #restart-btn, #homepage, #next{
+            font-size: 1.3rem;
+            margin: 5% 0%;
+            border: none;
+            border-radius: 5px;
+            padding: 4% 8%;          
+            cursor: pointer; 
+        }
+        #next{
+            display:inline;
+        }
+        #restart-btn:hover, #homepage:hover, #next:hover{
+            background-color: #9CAFB7;
+            color: #FFF;
+            transition: 0.3s;
+        }
+        #q-container p, #q-container h2{
+            font-size: 1.5rem;
+            color: #FFF;
+        }
+        .answer-button:disabled {
+            background-color: #676d70;
+            color: #FFF;
+            cursor:default;
+        }
+        .answer-button {
+            animation: sliding 1s;
+            position: relative;
+        }
+
+
+    </style>
+    <link rel="icon" type="image/x-icon" href="../icon/icon.jpg">
+    <script src="https://kit.fontawesome.com/7ef0eb13a1.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div id="quiz-container">
+        <h2>General Knowledege</h2>
+        <p id="count-timer">Time Left: <span id="timer">25</span>s</p>
+        <div id ="q-container">
+            <p id="question-container"></p>
+            <div id ="choice-btn"></div>
+            <p id="result"></p>
+        </div>
+        <div id="buttons">
+            <a href="../index.html"><button id="homepage" ><i class="fa-solid fa-house"></i></button></a>
+            <a href="genquest.html"><button id="restart-btn" ><i class="fa-solid fa-rotate-right"></i></button></a>
+            <button id="next" onclick="nextQuestion()"><i class="fa-solid fa-arrow-right"></i></button>
+        </div>
+    </div>
+    <script>
+        //To store set of questions or Array of questions
+        const quizQuestions = [
+            {
+                question: "Which planet is known as the 'Red Planet'?",
+                options: ["Venus", "Mars", "Jupiter", "Saturn"],
+                correctAnswer: "Mars"
+            },
+            {
+                question: "Who wrote 'Harry Potter Series Book'?",
+                options: ["J.K Rowling", "Charles Dickens", "Emily Brontë", "Leo Tolstoy"],
+                correctAnswer: "J.K Rowling"
+            },
+            {
+                question: "Who wrote 'Romeo and Juliet'?",
+                options: ["Charles Dickens", "Jane Austen", "William Shakespeare", "Mark Twain"],
+                correctAnswer: "William Shakespeare"
+            },
+            {
+                question: "Which element has the chemical symbol 'O'?",
+                options: ["Osmium", "Oxygen", "Oganesson", "Osmium"],
+                correctAnswer: "Oxygen"
+            },
+            {
+                question: "Who painted 'Starry Night'?",
+                options: ["Vincent van Gogh", "Pablo Picasso", "Claude Monet", "Leonardo da Vinci"],
+                correctAnswer: "Vincent van Gogh"
+            }
+        ];
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let timeleft = 25;
+        let timerInterval;
+
+        function startQuiz() {
+            currentQuestionIndex = 0;
+            score = 0;
+            startTimer();
+            displayQuestion();
+        }
+
+        function displayQuestion() {
+            clearInterval(timerInterval); // Clear any existing timers
+
+            const currentQuestion = quizQuestions[currentQuestionIndex];
+            const questionContainer = document.getElementById("question-container");
+            const choiceBtn = document.getElementById("choice-btn");
+
+            questionContainer.innerHTML = "";
+            choiceBtn.innerHTML = "";
+
+            questionContainer.innerHTML = currentQuestion.question;
+
+            currentQuestion.options.forEach(option => {
+                const button = document.createElement("button");
+                button.innerText = option;
+                button.classList.add("answer-button");
+                choiceBtn.appendChild(button);
+
+                button.addEventListener("click", function () {
+                    checkAnswer(option);
+                    disableOptions(); //To disable other options if the user already choose an answer
+                });
+            });
+
+            startTimer(); // Start a new timer for the current question
+        };
+
+        function checkAnswer(selectedOption) {
+            const currentQuestion = quizQuestions[currentQuestionIndex];
+            const result = document.getElementById("result");
+            if (selectedOption === currentQuestion.correctAnswer) {
+                score++;
+                result.innerHTML="Correct!";
+            }else{
+                result.innerHTML=`Incorrect. The correct answer is ${currentQuestion.correctAnswer}`;
+            };
+        };
+        function disableOptions(){
+            const answerButtons = document.querySelectorAll(".answer-button");
+            answerButtons.forEach(button=>{
+                button.disabled = true;
+            });
+        };
+        //To move to the next question
+        function nextQuestion(){
+            if(confirm("Do you want to move to the next question?")){
+                currentQuestionIndex++;
+            }else{
+                //pass
+            };
+            //To end the quiz if there are no available question
+            if (currentQuestionIndex < quizQuestions.length) {
+                displayQuestion();
+            } else {
+                endQuiz();
+            }
+        };
+        function startTimer() {
+            const result = document.getElementById("result");
+            timeleft = 25;
+            timerInterval = setInterval(function () {
+                if(timeleft > 0){
+                    timeleft--;
+                    document.getElementById("timer").textContent = timeleft;
+                }else{
+                    clearInterval(timerInterval);
+                    disableOptions();
+                    result.innerHTML="You didn't choose an answer."
+                }       
+            }, 1000);
+        }
+
+        function endQuiz() {
+            clearInterval(timerInterval);
+            document.getElementById("next").style.display = "none";
+
+            const questionContainer = document.getElementById("q-container");
+            questionContainer.innerHTML = `
+                <h2>Quiz Completed!</h2>
+                <p>Your Score: ${score} out of ${quizQuestions.length}</p>
+            `;
+        }
+
+        startQuiz();
+    </script>
+</body>
+</html>
